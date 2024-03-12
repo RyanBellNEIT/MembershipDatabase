@@ -20,9 +20,7 @@ namespace DataEntryMySQL
 		MySqlCommand^ sqlCmd = gcnew MySqlCommand();
 		DataTable^ sqlDt = gcnew DataTable();
 		MySqlDataAdapter^ sqlDtA = gcnew MySqlDataAdapter();
-		private: System::Windows::Forms::Button^ btnSearch;
-
-		   MySqlDataReader^ sqlDtR;
+		MySqlDataReader^ sqlDtR;
 
 		public:
 			MyForm(void)
@@ -53,6 +51,7 @@ namespace DataEntryMySQL
 		private: System::Windows::Forms::Button^ btnDelete;
 		private: System::Windows::Forms::Button^ btnUpdate;
 		private: System::Windows::Forms::Button^ btnRefresh;
+		private: System::Windows::Forms::Button^ btnSearch;
 
 
 		private: System::Windows::Forms::DataGridView^ dataGridView1;
@@ -620,9 +619,11 @@ namespace DataEntryMySQL
 				sqlConn->ConnectionString = "datasource = localhost; port = 3306; username = root; password = password; database = membership";
 				sqlCmd->Connection = sqlConn;
 
+				//Sets up command, and opens connection.
 				MySqlCommand^ sqlCmd = gcnew MySqlCommand("delete from membership where RefNo = " + txtRef->Text + "", sqlConn);
 				sqlConn->Open();
 
+				//Executes command, and closes connection.
 				sqlDtR = sqlCmd->ExecuteReader();
 				MessageBox::Show("Record Deleted", "Data Entry Form", MessageBoxButtons::OK, MessageBoxIcon::Information);
 				sqlConn->Close();
@@ -631,6 +632,7 @@ namespace DataEntryMySQL
 			{
 				MessageBox::Show(ex->Message, "Data Entry Form", MessageBoxButtons::OK, MessageBoxIcon::Information);
 			}
+			//Refreshes database.
 			MembershipDB();
 			RefreshDB();
 		}
@@ -638,6 +640,7 @@ namespace DataEntryMySQL
 		{
 			try
 			{
+				//Sets up the connection. and sets the command text.
 				sqlConn->ConnectionString = "datasource = localhost; port = 3306; username = root; password = password; database = membership";
 				sqlCmd->Connection = sqlConn;
 				
@@ -646,11 +649,12 @@ namespace DataEntryMySQL
 					"', Prove = '" + comboBoxProof->Text + "', DOB = '" + dateTime->Text + "', MemberType = '" + comboBoxMemType->Text + "', MemberFees = '" +
 					comboBoxMemFees->Text + "' WHERE RefNo =" + txtRef->Text + "", sqlConn;
 
-				//Executes command, then closes connection.
+				//Opens connection, executes command, then closes connection.
 				sqlConn->Open();
 				sqlCmd->ExecuteNonQuery();
 				sqlConn->Close();
 
+				//Refreshes database.
 				MembershipDB();
 				RefreshDB();
 			}
@@ -661,6 +665,7 @@ namespace DataEntryMySQL
 		}
 		private: System::Void dataGridView1_CellClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) 
 		{
+			//Sets text from selected row.
 			try
 			{
 				txtRef->Text = dataGridView1->SelectedRows[0]->Cells[0]->Value->ToString();
@@ -687,6 +692,7 @@ namespace DataEntryMySQL
 		{
 			try
 			{
+				//If pressed enter, search by first name in search box.
 				if (e->KeyChar == (Char)13)
 				{
 					DataView^ dv = sqlDt->DefaultView;
@@ -702,6 +708,7 @@ namespace DataEntryMySQL
 
 		private: System::Void btnSearch_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
+			//Searches by first name in search box.
 			try
 			{
 				DataView^ dv = sqlDt->DefaultView;
