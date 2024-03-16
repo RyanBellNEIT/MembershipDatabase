@@ -2,7 +2,6 @@
 
 namespace DataEntryMySQL 
 {
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -169,7 +168,7 @@ namespace DataEntryMySQL
 				this->panel1->Controls->Add(this->label1);
 				this->panel1->Location = System::Drawing::Point(12, 29);
 				this->panel1->Name = L"panel1";
-				this->panel1->Size = System::Drawing::Size(1340, 203);
+				this->panel1->Size = System::Drawing::Size(1364, 424);
 				this->panel1->TabIndex = 0;
 				// 
 				// comboBoxProof
@@ -178,7 +177,7 @@ namespace DataEntryMySQL
 					static_cast<System::Byte>(0)));
 				this->comboBoxProof->FormattingEnabled = true;
 				this->comboBoxProof->Items->AddRange(gcnew cli::array< System::Object^  >(5) {
-					L"Government ID", L"Passport", L"Driver\'s License",
+					L"Government ID", L"Passport", L"Drivers License",
 						L"Military ID", L"Tribal ID"
 				});
 				this->comboBoxProof->Location = System::Drawing::Point(574, 96);
@@ -498,10 +497,13 @@ namespace DataEntryMySQL
 				// 
 				// dataGridView1
 				// 
+				this->dataGridView1->AllowUserToAddRows = false;
+				this->dataGridView1->AllowUserToDeleteRows = false;
 				this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 				this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 				this->dataGridView1->Location = System::Drawing::Point(21, 10);
 				this->dataGridView1->Name = L"dataGridView1";
+				this->dataGridView1->ReadOnly = true;
 				this->dataGridView1->RowHeadersWidth = 62;
 				this->dataGridView1->RowTemplate->Height = 28;
 				this->dataGridView1->Size = System::Drawing::Size(1290, 409);
@@ -516,8 +518,10 @@ namespace DataEntryMySQL
 				this->Controls->Add(this->panel3);
 				this->Controls->Add(this->panel2);
 				this->Controls->Add(this->panel1);
+				this->MaximizeBox = false;
+				this->MinimizeBox = false;
 				this->Name = L"MyForm";
-				this->Text = L"MyForm";
+				this->Text = L"Membership Registration";
 				this->panel1->ResumeLayout(false);
 				this->panel1->PerformLayout();
 				this->panel2->ResumeLayout(false);
@@ -631,6 +635,7 @@ namespace DataEntryMySQL
 			catch (Exception^ ex)
 			{
 				MessageBox::Show(ex->Message, "Data Entry Form", MessageBoxButtons::OK, MessageBoxIcon::Information);
+				sqlConn->Close();
 			}
 			//Refreshes database.
 			MembershipDB();
@@ -661,6 +666,7 @@ namespace DataEntryMySQL
 			catch (Exception^ ex)
 			{
 				MessageBox::Show(ex->Message, "Data Entry Form", MessageBoxButtons::OK, MessageBoxIcon::Information);
+				sqlConn->Close();
 			}
 		}
 		private: System::Void dataGridView1_CellClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) 
@@ -668,16 +674,19 @@ namespace DataEntryMySQL
 			//Sets text from selected row.
 			try
 			{
-				txtRef->Text = dataGridView1->SelectedRows[0]->Cells[0]->Value->ToString();
-				txtFirstName->Text = dataGridView1->SelectedRows[0]->Cells[1]->Value->ToString();
-				txtLastName->Text = dataGridView1->SelectedRows[0]->Cells[2]->Value->ToString();
-				txtAddress->Text = dataGridView1->SelectedRows[0]->Cells[3]->Value->ToString();
-				txtMobile->Text = dataGridView1->SelectedRows[0]->Cells[4]->Value->ToString();
-				txtDateReg->Text = dataGridView1->SelectedRows[0]->Cells[5]->Value->ToString();
-				comboBoxProof->Text = dataGridView1->SelectedRows[0]->Cells[6]->Value->ToString();
-				dateTime->Text = dataGridView1->SelectedRows[0]->Cells[7]->Value->ToString();
-				comboBoxMemType->Text = dataGridView1->SelectedRows[0]->Cells[8]->Value->ToString();
-				comboBoxMemFees->Text = dataGridView1->SelectedRows[0]->Cells[9]->Value->ToString();
+				if (dataGridView1->SelectedRows->Count >= 1)
+				{
+					txtRef->Text = dataGridView1->SelectedRows[0]->Cells[0]->Value->ToString();
+					txtFirstName->Text = dataGridView1->SelectedRows[0]->Cells[1]->Value->ToString();
+					txtLastName->Text = dataGridView1->SelectedRows[0]->Cells[2]->Value->ToString();
+					txtAddress->Text = dataGridView1->SelectedRows[0]->Cells[3]->Value->ToString();
+					txtMobile->Text = dataGridView1->SelectedRows[0]->Cells[4]->Value->ToString();
+					txtDateReg->Text = dataGridView1->SelectedRows[0]->Cells[5]->Value->ToString();
+					comboBoxProof->Text = dataGridView1->SelectedRows[0]->Cells[6]->Value->ToString();
+					dateTime->Text = dataGridView1->SelectedRows[0]->Cells[7]->Value->ToString();
+					comboBoxMemType->Text = dataGridView1->SelectedRows[0]->Cells[8]->Value->ToString();
+					comboBoxMemFees->Text = dataGridView1->SelectedRows[0]->Cells[9]->Value->ToString();
+				}
 			}
 			catch (Exception^ ex)
 			{
@@ -751,6 +760,7 @@ namespace DataEntryMySQL
 			catch (Exception^ ex)
 			{
 				MessageBox::Show(ex->Message, "Data Entry Form", MessageBoxButtons::OK, MessageBoxIcon::Information);
+				sqlConn->Close();
 			}
 		}
 		#pragma endregion
